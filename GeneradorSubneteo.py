@@ -67,7 +67,7 @@ def genera_tablasubeteo(clase,ip,bitsprestados):
             combinacionesiptres = combinacionesip[16::]    
             print(combinacionesip+ "   " +combinacionesipuno+"."+combinacionesipdos +"."+combinacionesiptres + " :  "+str(binario_a_decimal(combinacionesipuno)) + " :  "+str(binario_a_decimal(combinacionesipdos)) + " :  "+str(binario_a_decimal(combinacionesiptres)))
             if ban:
-                print(binario_a_decimal(combinacionesipuno)-1)
+                """print(binario_a_decimal(combinacionesipuno)-1)
                 if bitsprestados > 0 and bitsprestados <=8:    
                     ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+".255.255")
                 elif bitsprestados > 8 and bitsprestados <=16:
@@ -75,6 +75,41 @@ def genera_tablasubeteo(clase,ip,bitsprestados):
                         ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
                     else:
                         ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
+                """
+                if bitsprestados > 0 and bitsprestados <= 8:
+                    ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+".255.255")
+                elif bitsprestados > 8 and bitsprestados <= 16:
+                    if ultimo[1].split(".")[0] == combinacionesipuno:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
+                    else:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+".255.255")
+                elif bitsprestados > 16 and bitsprestados <= 24:
+                    if ultimo[1].split(".")[0] == combinacionesipuno and ultimo[1].split(".")[1] == combinacionesipdos and ultimo[1].split(".")[2] == combinacionesiptres:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos))+".255")
+                    elif ultimo[1].split(".")[0] == combinacionesipuno and ultimo[1].split(".")[1] == combinacionesipdos:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos))+"."+str(binario_a_decimal(combinacionesiptres)-1))
+                    elif ultimo[1].split(".")[0] == combinacionesipuno and ultimo[1].split(".")[2] == combinacionesiptres:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos)-1)+"."+str(binario_a_decimal(combinacionesiptres)))
+                    elif ultimo[1].split(".")[1] == combinacionesipdos and ultimo[1].split(".")[2] == combinacionesiptres:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos))+"."+str(binario_a_decimal(combinacionesiptres)))
+                    elif combinacionesipdos.find("1") == -1:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+".255.255")    
+                    else:
+                        if combinacionesipuno.find("1") == -1:
+                            ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
+                        else:
+                            ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
+                    """
+                    elif ultimo[1].split(".")[0] == combinacionesipuno:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos)-1)+"."+str(binario_a_decimal(combinacionesiptres)-1))
+                    elif ultimo[1].split(".")[1] == combinacionesipdos:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos))+"."+str(binario_a_decimal(combinacionesiptres)-1))
+                    elif ultimo[1].split(".")[2] == combinacionesiptres :
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos)-1)+"."+str(binario_a_decimal(combinacionesiptres)-1))
+                    else:
+                    """
+                    
+                        
                 listasegmentos.append(ultimo)
                 ultimo = [ipsplit[0],combinacionesipuno+"."+combinacionesipdos+"."+combinacionesiptres,str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos))+"."+str(binario_a_decimal(combinacionesiptres))]
             else:
@@ -136,7 +171,7 @@ dictclase = {
 }
 
 ip = "32.0.0.0"
-numredes = 1025
+numredes = 8388606
 clase = get_clase(ip,dictclase)
 print(clase)
 bitsprestados = get_bits_prestados(numredes,clase)
