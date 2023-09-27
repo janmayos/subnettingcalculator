@@ -10,7 +10,7 @@ while True:
     conexion, addr = mi_socket.accept()
     print("Nueva conexión establecida!")
     print(addr)
-    peticion = conexion.recv(3072000)
+    peticion = conexion.recv(3221225472)
     request_pet = json.loads(peticion.decode('utf-8'))
     print(request_pet,type(request_pet))
     if request_pet["op"] == 1:

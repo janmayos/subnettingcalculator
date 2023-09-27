@@ -7,9 +7,9 @@ def enviar_peticion(jsoninfo):
     mi_socket = socket.socket()
     mi_socket.connect(("localhost",8000))
     mi_socket.send(bytes(json.dumps(jsoninfo), 'utf-8'))
-    respuesta = mi_socket.recv(3072000)
+    respuesta = mi_socket.recv(3221225472)
     request_res = json.loads(respuesta.decode('utf-8'))
-    print(request_res,type(request_res))
+    #print(request_res,type(request_res))
     mi_socket.close()
     return request_res
 
@@ -36,4 +36,9 @@ if __name__ == '__main__':
             else:
                 for datostabla in jsonrec[clave]:
                     #print(datostabla)
-                    print(str(datostabla[0])+"."+str(datostabla[1])+"."+str(datostabla[2])+"."+str(datostabla[3])+" ["+str(datostabla[4])+"-"+str(datostabla[5])+"] ")
+                    if jsonrec["ClaseIP"] =="C":
+                        print(str(datostabla[0])+"."+str(datostabla[1])+"."+str(datostabla[2])+"."+str(datostabla[3])+" ["+str(datostabla[4])+"-"+str(datostabla[5])+"] ")
+                    elif jsonrec["ClaseIP"] =="B":
+                        print(str(datostabla[0])+"."+str(datostabla[1])+"."+str(datostabla[2])+" ["+str(datostabla[3])+"-"+str(datostabla[4])+"] ")
+                    elif jsonrec["ClaseIP"] =="A":
+                        print(str(datostabla[0])+"."+str(datostabla[1])+" ["+str(datostabla[2])+"-"+str(datostabla[3])+"] ")
