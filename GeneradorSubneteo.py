@@ -45,7 +45,7 @@ def genera_tablasubeteo(clase,ip,bitsprestados):
             combinacionesipuno = combinacionesip[0:8]
             combinacionesipdos = combinacionesip[8::]
 
-            print(combinacionesip+ "   " +combinacionesipuno+"."+combinacionesipdos + " :  "+str(binario_a_decimal(combinacionesipuno)) + " :  "+str(binario_a_decimal(combinacionesipdos)))
+            #print(combinacionesip+ "   " +combinacionesipuno+"."+combinacionesipdos + " :  "+str(binario_a_decimal(combinacionesipuno)) + " :  "+str(binario_a_decimal(combinacionesipdos)))
             if ban:
                 if combinacionesipdos.find("1") != -1:
                     ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos)-1))
@@ -65,7 +65,7 @@ def genera_tablasubeteo(clase,ip,bitsprestados):
             combinacionesipuno = combinacionesip[0:8]
             combinacionesipdos = combinacionesip[8:16]
             combinacionesiptres = combinacionesip[16::]    
-            print(combinacionesip+ "   " +combinacionesipuno+"."+combinacionesipdos +"."+combinacionesiptres + " :  "+str(binario_a_decimal(combinacionesipuno)) + " :  "+str(binario_a_decimal(combinacionesipdos)) + " :  "+str(binario_a_decimal(combinacionesiptres)))
+            #print(combinacionesip+ "   " +combinacionesipuno+"."+combinacionesipdos +"."+combinacionesiptres + " :  "+str(binario_a_decimal(combinacionesipuno)) + " :  "+str(binario_a_decimal(combinacionesipdos)) + " :  "+str(binario_a_decimal(combinacionesiptres)))
             if ban:
                 """print(binario_a_decimal(combinacionesipuno)-1)
                 if bitsprestados > 0 and bitsprestados <=8:    
@@ -149,7 +149,7 @@ def getbinario(bitsprestados,clase):
     bitsdisp = {"A":24,"B":16,"C":8}
     listabinario = []
     maxdecimal = pow(2,bitsprestados)
-    print(maxdecimal)
+    #print(maxdecimal)
     binario = 0
     i = 0
     for numdecimal in range(maxdecimal):
@@ -217,9 +217,9 @@ def generar_rango_subredes(mascara_redbits,mascarasubredbits,bitsprestados):
         else:
             auxmascara_redbits+= '0'
     auxmascarasubredbits = mascarasubredbits.replace("11111111.","").replace(".","")
-    print(auxmascara_redbits,auxmascarasubredbits)
+    #print(auxmascara_redbits,auxmascarasubredbits)
     auxresultado = ""
-    print(auxmascara_redbits,auxmascarasubredbits)
+    #print(auxmascara_redbits,auxmascarasubredbits)
     auxmascara_redbits = auxmascara_redbits[::-1]
     auxmascarasubredbits = auxmascarasubredbits[::-1]
     
@@ -233,35 +233,11 @@ def generar_rango_subredes(mascara_redbits,mascarasubredbits,bitsprestados):
 
 
 
-def get_info_basico(){
-    dictclase = {
-    "A" : (1,126,"255.0.0.0","1.0.0.0","126.0.0.0"),
-    "B" : (128,191,"255.255.0.0","128.0.0.0","191.255.0.0"),
-    "C" : (193,223,"255.255.255.0","192.0.0.0","223.255.255.0")
-}
 
 
+def get_info_basico(ip,numredes):
 
-dictclaveprivada = {"A":["10.0.0.0","10.255.255.255"],"B":["172.16.0.0","172.31.255.255"], "C":["192.168.0.0","192.168.255.255"],}
-
-ip = "8.0.0.0"
-numredes = 6
-clase,mascara_red  = get_clase_mascara(ip,dictclase)
-bitsprestados = get_bits_prestados(numredes,clase)
-
-mascara_redbits,mascarasubredbits,mascarasubred = mascara_bits(mascara_red,bitsprestados)
-rango_subredes = generar_rango_subredes(mascara_redbits,mascarasubredbits,bitsprestados)
-
-return info = {"ClaseIP" : clase,"MascaraRed" : mascara_red,"MascaraBits" : mascara_redbits,"BistPrestados" : bitsprestados,"MascaraSubRedBits" : mascarasubredbits,"MascaraSubRed" : mascarasubred,"RangoHost":rango_subredes}
-
-
-for subneteo in genera_tablasubeteo(clase,ip,bitsprestados):
-    print(subneteo)
-
-}
-
-
-def get_info_basico():
+    numredes = int(numredes)
     dictclase = {
     "A" : (1,126,"255.0.0.0","1.0.0.0","126.0.0.0"),
     "B" : (128,191,"255.255.0.0","128.0.0.0","191.255.0.0"),
@@ -272,8 +248,8 @@ def get_info_basico():
 
     dictclaveprivada = {"A":["10.0.0.0","10.255.255.255"],"B":["172.16.0.0","172.31.255.255"], "C":["192.168.0.0","192.168.255.255"],}
 
-    ip = "8.0.0.0"
-    numredes = 6
+    #ip = "8.0.0.0"
+    #numredes = 6
     clase,mascara_red  = get_clase_mascara(ip,dictclase)
     bitsprestados = get_bits_prestados(numredes,clase)
 
@@ -283,10 +259,12 @@ def get_info_basico():
     info = {"ClaseIP" : clase,"MascaraRed" : mascara_red,"MascaraBits" : mascara_redbits,"BistPrestados" : bitsprestados,"MascaraSubRedBits" : mascarasubredbits,"MascaraSubRed" : mascarasubred,"RangoHost":rango_subredes}
 
     return info
-    for subneteo in genera_tablasubeteo(clase,ip,bitsprestados):
-        print(subneteo)
 
-def get_info_basico_tabla():
+
+def get_info_basico_tabla(ip,numredes):
+    #ip = "8.0.0.0"
+    #numredes = 6
+    numredes = int(numredes)
     dictclase = {
     "A" : (1,126,"255.0.0.0","1.0.0.0","126.0.0.0"),
     "B" : (128,191,"255.255.0.0","128.0.0.0","191.255.0.0"),
@@ -297,8 +275,7 @@ def get_info_basico_tabla():
 
     dictclaveprivada = {"A":["10.0.0.0","10.255.255.255"],"B":["172.16.0.0","172.31.255.255"], "C":["192.168.0.0","192.168.255.255"],}
 
-    ip = "8.0.0.0"
-    numredes = 6
+    
     clase,mascara_red  = get_clase_mascara(ip,dictclase)
     bitsprestados = get_bits_prestados(numredes,clase)
 
