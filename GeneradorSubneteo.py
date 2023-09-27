@@ -1,11 +1,11 @@
 from itertools import *
 
-def get_clase(ip,dictclase):
+def get_clase_mascara(ip,dictclase):
     for clase in dictclase:
         valores = dictclase[clase]
         ipsplit = ip.split(".")
         if int(ipsplit[0]) >= valores[0] and int(ipsplit[0]) <=valores[1]:
-            return clase
+            return clase,dictclase[clase][2]
         
 #num redes mayor a 1
 def get_bits_prestados(numredes,clase):
@@ -164,17 +164,91 @@ def getbinario(bitsprestados,clase):
         listabinario.append(aux__binario)
     return listabinario
 
+def mascara_bits(mascarared,bitsprestados):
+    mascara_redbits = ""
+    mascarasubredbits = ""
+    auxmascarasubredbits = ""
+    mascarasubred = ""
+    
+    
+    for porcionmasrcara in mascarared.split("."):
+        aux__binario = str(aux_binario(int(porcionmasrcara)))
+        auxmascarasubredbits = ""
+        if aux__binario.find("0") != -1:
+            if bitsprestados >= 8:
+                for unos in range(8):
+                    auxmascarasubredbits += "1"
+                
+                mascarasubred += str(binario_a_decimal(auxmascarasubredbits))
+                mascarasubred += "."
+                mascarasubredbits += auxmascarasubredbits
+                mascarasubredbits += "."
+                bitsprestados-=8
+            else:
+                for unos in range(bitsprestados):
+                    auxmascarasubredbits += "1"
+                for ceros in range(8-bitsprestados):
+                    auxmascarasubredbits += "0"    
+                bitsprestados = 0                    
+                mascarasubred += str(binario_a_decimal(auxmascarasubredbits))
+                mascarasubred += "."
+                mascarasubredbits += auxmascarasubredbits
+                mascarasubredbits += "."
+            for ceros in range(8-len(aux__binario)):
+                aux__binario = "0"+aux__binario
+            mascara_redbits+= aux__binario
+            mascara_redbits+="."
+        else:
+            mascarasubredbits += aux__binario
+            mascarasubredbits += "."
+            mascarasubred += str(binario_a_decimal(aux__binario))
+            mascarasubred += "."
+            mascara_redbits+= aux__binario
+            mascara_redbits+="."
+    return mascara_redbits[0:-1],mascarasubredbits[0:-1],mascarasubred[0:-1]
+
+def generar_rango_subredes(mascara_redbits,mascarasubredbits,bitsprestados):
+    
+    auxmascara_redbits2 = str(mascara_redbits.replace("11111111.","").replace(".",""))
+    auxmascara_redbits = ""
+    for pos in range(len(auxmascara_redbits2)):
+        if pos <= bitsprestados:
+            auxmascara_redbits+= '1'
+        else:
+            auxmascara_redbits+= '0'
+    auxmascarasubredbits = mascarasubredbits.replace("11111111.","").replace(".","")
+    print(auxmascara_redbits,auxmascarasubredbits)
+    auxresultado = ""
+    print(auxmascara_redbits,auxmascarasubredbits)
+    auxmascara_redbits = auxmascara_redbits[::-1]
+    auxmascarasubredbits = auxmascarasubredbits[::-1]
+    
+    for pos in range(len(auxmascarasubredbits)):
+        if auxmascara_redbits[pos] == "1" and auxmascarasubredbits[pos] == "1":
+            auxresultado+="1"
+        else:
+            auxresultado+="0"
+    auxresultado=auxresultado.replace("1","").replace("0","1")
+    return binario_a_decimal(auxresultado[::-1])+1
+
+
 dictclase = {
-    "A" : (1,126,24,"1.0.0.0","126.0.0.0"),
-    "B" : (128,191,"128.0.0.0","191.255.0.0"),
-    "C" : (193,223,"192.0.0.0","223.255.255.0")
+    "A" : (1,126,"255.0.0.0","1.0.0.0","126.0.0.0"),
+    "B" : (128,191,"255.255.0.0","128.0.0.0","191.255.0.0"),
+    "C" : (193,223,"255.255.255.0","192.0.0.0","223.255.255.0")
 }
 
-ip = "32.0.0.0"
-numredes = 8388606
-clase = get_clase(ip,dictclase)
-print(clase)
+dictclaveprivada = {"A":["10.0.0.0","10.255.255.255"],"B":["172.16.0.0","172.31.255.255"], "C":["192.168.0.0","192.168.255.255"],}
+
+ip = "8.0.0.0"
+numredes = 6
+clase,mascara_red  = get_clase_mascara(ip,dictclase)
 bitsprestados = get_bits_prestados(numredes,clase)
-print(bitsprestados)
+
+mascara_redbits,mascarasubredbits,mascarasubred = mascara_bits(mascara_red,bitsprestados)
+rango_subredes = generar_rango_subredes(mascara_redbits,mascarasubredbits,bitsprestados)
+info = {"ClaseIP" : clase,"MascaraRed" : mascara_red,"MascaraBits" : mascara_redbits,"BistPrestados" : bitsprestados,"MascaraSubRedBits" : mascarasubredbits,"MascaraSubRed" : mascarasubred,"RangoHost":rango_subredes}
+print(info)
+exit(0)
 for subneteo in genera_tablasubeteo(clase,ip,bitsprestados):
     print(subneteo)
