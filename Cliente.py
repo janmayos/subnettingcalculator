@@ -7,7 +7,7 @@ def enviar_peticion(jsoninfo):
     mi_socket = socket.socket()
     mi_socket.connect(("localhost",8000))
     mi_socket.send(bytes(json.dumps(jsoninfo), 'utf-8'))
-    respuesta = mi_socket.recv(1024)
+    respuesta = mi_socket.recv(3072000)
     request_res = json.loads(respuesta.decode('utf-8'))
     print(request_res,type(request_res))
     mi_socket.close()
@@ -35,5 +35,5 @@ if __name__ == '__main__':
                 print(clave+": "+str(jsonrec[clave]))
             else:
                 for datostabla in jsonrec[clave]:
-                    print(datostabla)
+                    #print(datostabla)
                     print(str(datostabla[0])+"."+str(datostabla[1])+"."+str(datostabla[2])+"."+str(datostabla[3])+" ["+str(datostabla[4])+"-"+str(datostabla[5])+"] ")
