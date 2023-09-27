@@ -19,16 +19,16 @@ def get_bits_prestados(numredes,clase):
 def genera_tablasubeteo(clase,ip,bitsprestados):
     clasebits = {"A":"00000000.00000000.00000000","B":"00000000.00000000","C":"00000000"}
     listbits = getbinario(bitsprestados,clase)
-    print("IP: ",ip)
+    #print("IP: ",ip)
     ipsplit = ip.split(".")
-    print(ipsplit)
+    #print(ipsplit)
     listasegmentos = []
     if clase == "C":
         ultimo = []
         ban = False
         for combinacionesip in listbits:
             
-            print(combinacionesip + " :  "+str(binario_a_decimal(combinacionesip)))
+            #print(combinacionesip + " :  "+str(binario_a_decimal(combinacionesip)))
             if ban:
                 ultimo.append(binario_a_decimal(combinacionesip)-1)
                 listasegmentos.append(ultimo)
@@ -58,12 +58,36 @@ def genera_tablasubeteo(clase,ip,bitsprestados):
                 ban = True
         ultimo.append("255.255")
         listasegmentos.append(ultimo)
+    elif clase == "A":
+        ultimo = []
+        ban = False
+        for combinacionesip in listbits:
+            combinacionesipuno = combinacionesip[0:8]
+            combinacionesipdos = combinacionesip[8:16]
+            combinacionesiptres = combinacionesip[16::]    
+            print(combinacionesip+ "   " +combinacionesipuno+"."+combinacionesipdos +"."+combinacionesiptres + " :  "+str(binario_a_decimal(combinacionesipuno)) + " :  "+str(binario_a_decimal(combinacionesipdos)) + " :  "+str(binario_a_decimal(combinacionesiptres)))
+            if ban:
+                print(binario_a_decimal(combinacionesipuno)-1)
+                if bitsprestados > 0 and bitsprestados <=8:    
+                    ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+".255.255")
+                elif bitsprestados > 8 and bitsprestados <=16:
+                    if binario_a_decimal(combinacionesipuno)-1 != -1:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno)-1)+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
+                    else:
+                        ultimo.append(str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos)-1)+".255")
+                listasegmentos.append(ultimo)
+                ultimo = [ipsplit[0],combinacionesipuno+"."+combinacionesipdos+"."+combinacionesiptres,str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos))+"."+str(binario_a_decimal(combinacionesiptres))]
+            else:
+                ultimo = [ipsplit[0],combinacionesipuno+"."+combinacionesipdos+"."+combinacionesiptres,str(binario_a_decimal(combinacionesipuno))+"."+str(binario_a_decimal(combinacionesipdos))+"."+str(binario_a_decimal(combinacionesiptres))]
+                ban = True
+        ultimo.append("255.255.255")
+        listasegmentos.append(ultimo)
 
     return listasegmentos
 
 
 
-def aux_binario(numdecimal,decimal):
+def aux_binario(decimal):
     binario = 0
     i = 0
     while (decimal>0):
@@ -95,7 +119,7 @@ def getbinario(bitsprestados,clase):
     i = 0
     for numdecimal in range(maxdecimal):
         decimal = numdecimal
-        aux__binario = str(aux_binario(numdecimal,decimal))
+        aux__binario = str(aux_binario(decimal))
         for ceros in range(bitsprestados-len(aux__binario)):
             aux__binario = "0"+aux__binario     
         
@@ -111,10 +135,11 @@ dictclase = {
     "C" : (193,223,"192.0.0.0","223.255.255.0")
 }
 
-ip = "129.18.0.0"
-numredes = 510
+ip = "32.0.0.0"
+numredes = 1025
 clase = get_clase(ip,dictclase)
 print(clase)
 bitsprestados = get_bits_prestados(numredes,clase)
 print(bitsprestados)
-print(genera_tablasubeteo(clase,ip,bitsprestados))
+for subneteo in genera_tablasubeteo(clase,ip,bitsprestados):
+    print(subneteo)
