@@ -261,7 +261,7 @@ def get_info_basico_tabla(ip,numredes):
 
     info = get_info_basico(ip,numredes)
 
-    info["Tabla"] =  genera_tablasubeteo(info["ClaseIP"],ip,info["BistPrestados"])}
+    info["Tabla"] =  genera_tablasubeteo(info["ClaseIP"],ip,info["BistPrestados"])
 
     return info
 
